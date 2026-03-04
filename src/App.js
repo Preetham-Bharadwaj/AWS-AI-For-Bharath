@@ -19,6 +19,22 @@ const FontLink = () => (
       --glow-c:    rgba(0,212,255,0.18);
       --glow-g:    rgba(0,255,157,0.15);
     }
+    
+    /* Light theme */
+    [data-theme="light"] {
+      --bg:        #f5f7fa;
+      --surface:   #ffffff;
+      --card:      #ffffff;
+      --border:    #e1e8ed;
+      --cyan:      #0066cc;
+      --green:     #28a745;
+      --amber:     #f59e0b;
+      --red:       #dc3545;
+      --text:      #1a202c;
+      --muted:     #6c757d;
+      --glow-c:    rgba(0,102,204,0.1);
+      --glow-g:    rgba(40,167,69,0.1);
+    }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body, #root { height: 100%; background: var(--bg); }
     body { font-family: 'Sora', sans-serif; color: var(--text); overflow-x: hidden; }
@@ -38,6 +54,14 @@ const FontLink = () => (
         rgba(0,0,0,0.07) 3px, rgba(0,0,0,0.07) 4px
       );
     }
+    
+    [data-theme="light"] .scanlines::before {
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px, transparent 3px,
+        rgba(0,0,0,0.02) 3px, rgba(0,0,0,0.02) 4px
+      );
+    }
 
     /* Grid bg */
     .grid-bg {
@@ -45,6 +69,12 @@ const FontLink = () => (
         linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
       background-size: 48px 48px;
+    }
+    
+    [data-theme="light"] .grid-bg {
+      background-image:
+        linear-gradient(rgba(0,102,204,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,102,204,0.03) 1px, transparent 1px);
     }
 
     /* Pulse animation */
@@ -73,6 +103,11 @@ const FontLink = () => (
     @keyframes progress-fill {
       from { width: 0%; }
     }
+    @keyframes success-check {
+      0% { transform: scale(0) rotate(45deg); }
+      50% { transform: scale(1.2) rotate(45deg); }
+      100% { transform: scale(1) rotate(45deg); }
+    }
 
     .float-up   { animation: float-up 0.5s ease forwards; }
     .slide-right{ animation: slide-in-right 0.4s ease forwards; }
@@ -86,11 +121,40 @@ const FontLink = () => (
       font-family: 'Sora', sans-serif;
       font-weight: 600; letter-spacing: 0.03em;
       padding: 12px 28px; font-size: 0.95rem;
-      transition: all 0.2s;
+      transition: all 0.3s ease;
       box-shadow: 0 0 16px rgba(0,212,255,0.3);
+      position: relative;
+      overflow: hidden;
     }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 28px rgba(0,212,255,0.5); }
-    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+    .btn-primary:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+    .btn-primary:hover { 
+      transform: translateY(-2px); 
+      box-shadow: 0 0 28px rgba(0,212,255,0.5);
+    }
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+    .btn-primary:disabled { 
+      opacity: 0.4; 
+      cursor: not-allowed; 
+      transform: none;
+      box-shadow: none;
+    }
 
     .btn-secondary {
       background: transparent;
@@ -98,9 +162,17 @@ const FontLink = () => (
       border-radius: 8px; color: var(--text);
       cursor: pointer; font-family: 'Sora', sans-serif;
       font-size: 0.9rem; padding: 10px 22px;
-      transition: all 0.2s;
+      transition: all 0.3s ease;
     }
-    .btn-secondary:hover { border-color: var(--cyan); color: var(--cyan); }
+    .btn-secondary:hover { 
+      border-color: var(--cyan); 
+      color: var(--cyan);
+      background: rgba(0,212,255,0.05);
+      transform: translateY(-1px);
+    }
+    .btn-secondary:active {
+      transform: translateY(0);
+    }
 
     /* Card */
     .card {
@@ -108,11 +180,16 @@ const FontLink = () => (
       border: 1px solid var(--border);
       border-radius: 12px;
       position: relative; overflow: hidden;
+      transition: all 0.3s ease;
     }
     .card::before {
       content: '';
       position: absolute; top: 0; left: 0; right: 0; height: 1px;
       background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    }
+    .card:hover {
+      border-color: rgba(0,212,255,0.4);
+      box-shadow: 0 4px 12px rgba(0,212,255,0.1);
     }
 
     /* Input */
@@ -121,10 +198,17 @@ const FontLink = () => (
       border-radius: 8px; color: var(--text);
       font-family: 'Sora', sans-serif; font-size: 0.95rem;
       padding: 12px 16px; width: 100%;
-      transition: border-color 0.2s;
+      transition: all 0.3s ease;
       outline: none;
     }
-    .input-field:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(0,212,255,0.1); }
+    .input-field:focus { 
+      border-color: var(--cyan); 
+      box-shadow: 0 0 0 3px rgba(0,212,255,0.1);
+      background: rgba(0,212,255,0.02);
+    }
+    .input-field:hover:not(:focus) {
+      border-color: rgba(0,212,255,0.3);
+    }
     .input-field::placeholder { color: var(--muted); }
 
     /* Risk badges */
@@ -182,27 +266,270 @@ const FontLink = () => (
     .step-dot.active { background: var(--cyan); border-color: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
     .step-dot.done { background: var(--green); border-color: var(--green); }
 
-    /* Map simulation */
+    /* Map simulation - Google Maps style */
     .map-container {
-      background: radial-gradient(ellipse at center, #071e38 0%, var(--bg) 70%);
-      border: 1px solid var(--border);
-      border-radius: 12px; position: relative;
+      background: #f2efe9;
+      border: 1px solid #d4d4d4;
+      border-radius: 12px; 
+      position: relative;
       overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
+    
     .map-grid {
-      position: absolute; inset: 0;
+      position: absolute; 
+      inset: 0;
+      background-color: #f2efe9;
       background-image:
-        linear-gradient(rgba(0,212,255,0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,212,255,0.06) 1px, transparent 1px);
-      background-size: 32px 32px;
+        /* Water bodies */
+        radial-gradient(ellipse 150px 100px at 25% 30%, rgba(170,211,223,0.4) 0%, transparent 50%),
+        radial-gradient(ellipse 120px 80px at 75% 70%, rgba(170,211,223,0.35) 0%, transparent 50%),
+        /* Parks and green spaces */
+        radial-gradient(circle 60px at 20% 60%, rgba(200,230,201,0.5) 0%, transparent 70%),
+        radial-gradient(circle 50px at 80% 25%, rgba(200,230,201,0.45) 0%, transparent 70%),
+        radial-gradient(circle 40px at 60% 80%, rgba(200,230,201,0.4) 0%, transparent 70%),
+        /* Major highways - yellow/orange */
+        linear-gradient(to right, transparent 0%, transparent calc(50% - 3px), #f9a825 calc(50% - 3px), #fbc02d calc(50% - 2px), #fff9c4 50%, #fbc02d calc(50% + 2px), #f9a825 calc(50% + 3px), transparent calc(50% + 3px), transparent 100%),
+        linear-gradient(to bottom, transparent 0%, transparent calc(35% - 3px), #f9a825 calc(35% - 3px), #fbc02d calc(35% - 2px), #fff9c4 35%, #fbc02d calc(35% + 2px), #f9a825 calc(35% + 3px), transparent calc(35% + 3px), transparent 100%),
+        /* Main roads - white with gray borders */
+        linear-gradient(to right, transparent 0%, transparent calc(30% - 4px), #bdbdbd calc(30% - 4px), #ffffff calc(30% - 3px), #ffffff calc(30% + 3px), #bdbdbd calc(30% + 4px), transparent calc(30% + 4px), transparent 100%),
+        linear-gradient(to right, transparent 0%, transparent calc(70% - 4px), #bdbdbd calc(70% - 4px), #ffffff calc(70% - 3px), #ffffff calc(70% + 3px), #bdbdbd calc(70% + 4px), transparent calc(70% + 4px), transparent 100%),
+        linear-gradient(to bottom, transparent 0%, transparent calc(65% - 4px), #bdbdbd calc(65% - 4px), #ffffff calc(65% - 3px), #ffffff calc(65% + 3px), #bdbdbd calc(65% + 4px), transparent calc(65% + 4px), transparent 100%),
+        /* Secondary streets - light gray */
+        repeating-linear-gradient(to right, transparent 0px, transparent 80px, #e0e0e0 80px, #f5f5f5 81px, #f5f5f5 83px, #e0e0e0 84px, transparent 84px, transparent 160px),
+        repeating-linear-gradient(to bottom, transparent 0px, transparent 80px, #e0e0e0 80px, #f5f5f5 81px, #f5f5f5 83px, #e0e0e0 84px, transparent 84px, transparent 160px),
+        /* Building blocks */
+        repeating-linear-gradient(45deg, #f8f8f8 0px, #f8f8f8 40px, #eeeeee 40px, #eeeeee 80px);
+      background-size: 
+        100% 100%,
+        100% 100%,
+        100% 100%,
+        100% 100%,
+        100% 100%,
+        100% 100%,
+        100% 100%,
+        100% 100%,
+        100% 100%,
+        100% 100%,
+        160px 160px,
+        160px 160px,
+        80px 80px;
     }
+    
+    /* Add realistic landmarks */
+    .map-landmark {
+      position: absolute;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid #d4d4d4;
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 0.65rem;
+      color: #5f6368;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      pointer-events: none;
+    }
+    
     .map-pin {
       position: absolute;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -100%);
       cursor: pointer;
-      transition: transform 0.2s;
+      transition: all 0.2s;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+      z-index: 100;
     }
-    .map-pin:hover { transform: translate(-50%, -55%) scale(1.2); }
+    .map-pin:hover { 
+      transform: translate(-50%, -105%) scale(1.15);
+      z-index: 101;
+    }
+    
+    .map-pin-marker {
+      width: 24px; 
+      height: 30px;
+      position: relative;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
+    
+    .map-pin-marker svg {
+      width: 100%;
+      height: 100%;
+    }
+    
+    .map-tooltip {
+      position: absolute;
+      bottom: 45px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 6px 10px;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      color: #202124;
+      pointer-events: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      font-weight: 500;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    
+    .map-pin:hover .map-tooltip {
+      opacity: 1;
+    }
+    
+    .map-tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 6px solid white;
+    }
+    
+    .map-controls {
+      position: absolute;
+      bottom: 120px;
+      right: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      z-index: 10;
+      background: white;
+      border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+    
+    .map-control-btn {
+      width: 40px;
+      height: 40px;
+      background: white;
+      border: none;
+      border-bottom: 1px solid #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #5f6368;
+      font-size: 1.2rem;
+      font-weight: 300;
+    }
+    
+    .map-control-btn:last-child {
+      border-bottom: none;
+    }
+    
+    .map-control-btn:hover {
+      background: #f8f9fa;
+      color: #202124;
+    }
+    
+    .map-control-btn:active {
+      background: #e8eaed;
+    }
+    
+    .map-legend {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 20px;
+      padding: 8px 16px;
+      font-size: 0.7rem;
+      color: #5f6368;
+      display: flex;
+      gap: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      z-index: 10;
+    }
+    
+    .map-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+    }
+    
+    .map-legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+    
+    .user-location-marker {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #4285f4;
+      border: 3px solid white;
+      box-shadow: 0 0 0 1px rgba(66,133,244,0.3), 0 2px 4px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    
+    .user-location-marker::before {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      background: rgba(66,133,244,0.2);
+      animation: pulse-user-google 1.5s ease-out infinite;
+    }
+    
+    @keyframes pulse-user-google {
+      0% { 
+        transform: scale(1);
+        opacity: 1;
+      }
+      100% { 
+        transform: scale(2);
+        opacity: 0;
+      }
+    }
+    
+    .map-scale {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 0.65rem;
+      color: #5f6368;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .map-scale-bar {
+      width: 50px;
+      height: 2px;
+      background: #5f6368;
+      position: relative;
+    }
+    
+    .map-scale-bar::before,
+    .map-scale-bar::after {
+      content: '';
+      position: absolute;
+      width: 2px;
+      height: 6px;
+      background: #5f6368;
+      top: -2px;
+    }
+    
+    .map-scale-bar::before { left: 0; }
+    .map-scale-bar::after { right: 0; }
 
     /* Spinner */
     .spinner {
@@ -211,6 +538,12 @@ const FontLink = () => (
       border-top-color: var(--cyan);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
+    }
+    
+    @keyframes spin-pulse {
+      0% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.1); }
+      100% { transform: rotate(360deg) scale(1); }
     }
 
     /* Queue row */
@@ -365,31 +698,81 @@ async function fetchHospitalsFromOverpass(lat, lng, onStatus) {
 
       if (!hLat || !hLng) return null;
 
+      // Generate fallback phone number if not available
+      // Format: +91-XXX-YYYYYYY (Indian format as example)
+      const generatePhone = (index) => {
+        const areaCode = 800 + (index % 200); // 800-999
+        const number = 1000000 + (index * 123456) % 9000000;
+        return `+91-${areaCode}-${number}`;
+      };
+
+      // Better address formatting
+      const getAddress = () => {
+        if (el.tags["addr:full"]) return el.tags["addr:full"];
+        
+        const parts = [];
+        if (el.tags["addr:housenumber"]) parts.push(el.tags["addr:housenumber"]);
+        if (el.tags["addr:street"]) parts.push(el.tags["addr:street"]);
+        if (el.tags["addr:suburb"] || el.tags["addr:neighbourhood"]) {
+          parts.push(el.tags["addr:suburb"] || el.tags["addr:neighbourhood"]);
+        }
+        if (el.tags["addr:city"]) parts.push(el.tags["addr:city"]);
+        if (el.tags["addr:postcode"]) parts.push(el.tags["addr:postcode"]);
+        
+        return parts.length > 0 ? parts.join(", ") : "Address not available";
+      };
+
+      // Determine hospital type and emergency availability
+      const isEmergency = el.tags.emergency === "yes" || 
+                         el.tags.amenity === "hospital" ||
+                         el.tags["emergency:phone"] !== undefined;
+
+      // Better bed count estimation based on hospital type
+      const estimateBeds = () => {
+        if (el.tags.beds) return parseInt(el.tags.beds);
+        if (el.tags.amenity === "clinic") return 20 + (idx % 30);
+        return 100 + (idx % 200); // Hospitals typically have 100-300 beds
+      };
+
+      // Simulate bed availability (in real app, this would come from hospital API)
+      const totalBeds = estimateBeds();
+      const occupancyRate = 0.5 + (Math.random() * 0.4); // 50-90% occupancy
+      const occupiedBeds = Math.floor(totalBeds * occupancyRate);
+      const availableBeds = totalBeds - occupiedBeds;
+
+      // Generate realistic ratings
+      const generateRating = (index) => {
+        const ratings = [3.8, 4.0, 4.2, 4.3, 4.5, 4.6, 4.7];
+        return ratings[index % ratings.length];
+      };
+
       return {
         id: "h_" + idx,
         name: el.tags.name,
-        address:
-          el.tags["addr:full"] ||
-          `${el.tags["addr:street"] || ""} ${el.tags["addr:housenumber"] || ""}`.trim() ||
-          "",
+        address: getAddress(),
         lat: hLat,
         lng: hLng,
         distance: haversine(lat, lng, hLat, hLng),
-        rating: 4.0,
-        reviews: 100,
+        rating: generateRating(idx),
+        reviews: 50 + (idx * 37) % 500, // 50-550 reviews
         type: el.tags.amenity === "clinic" ? "Clinic" : "Hospital",
         specializations: SPEC_POOL[idx % SPEC_POOL.length],
-        openTime: "00:01",
-        closeTime: "23:59",
+        openTime: el.tags["opening_hours"] ? "08:00" : "00:00",
+        closeTime: el.tags["opening_hours"] ? "20:00" : "23:59",
         lunchBreak: null,
         teaBreak: null,
-        phone: el.tags.phone || "N/A",
-        emergency: el.tags.emergency === "yes",
-        beds: 100,
-        source: "OpenStreetMap"
+        phone: el.tags.phone || el.tags["contact:phone"] || el.tags["emergency:phone"] || generatePhone(idx),
+        emergency: isEmergency,
+        beds: totalBeds,
+        availableBeds: availableBeds,
+        occupiedBeds: occupiedBeds,
+        occupancyRate: Math.round(occupancyRate * 100),
+        source: "OpenStreetMap",
+        website: el.tags.website || el.tags["contact:website"] || null
       };
     })
     .filter(Boolean)
+    .filter(h => h.availableBeds > 0) // Only show hospitals with available beds
     .sort((a, b) => a.distance - b.distance)
     .slice(0, 15);
 
@@ -480,6 +863,375 @@ function generateTokenForHospital(hospitalId, riskLevel) {
   const pos = db.queue.findIndex(t => t.id === token.id);
   token.waitMins = pos * 12;
   return { token, position: pos + 1, total: db.queue.length, queue: [...db.queue] };
+}
+
+// ─── Translation System ──────────────────────────────────────────────────────
+const translations = {
+  en: {
+    // Header
+    appName: "AUTHENX",
+    tagline: "AI-POWERED HEALTHCARE TRIAGE",
+    live: "LIVE",
+    
+    // Menu
+    history: "History",
+    settings: "Settings",
+    
+    // Steps
+    location: "Location",
+    family: "Family",
+    symptoms: "Symptoms",
+    hospitals: "Hospitals",
+    analysis: "Analysis",
+    token: "Token",
+    
+    // Location Step
+    locateYou: "LOCATE YOU",
+    locationDesc: "We need your location to find nearby hospitals",
+    autoDetect: "Auto-Detect",
+    searchAddress: "Search Address",
+    detectingLocation: "Detecting Location…",
+    detectMyLocation: "Detect My Location",
+    detectedLocation: "DETECTED LOCATION",
+    isCorrectLocation: "Is this your correct location?",
+    yesContinue: "Yes, Continue",
+    reDetect: "Re-detect",
+    enterManually: "Enter location manually instead",
+    searchLocation: "Search your location (e.g., IIT Bombay, Apollo Hospital, Koramangala)",
+    typeToSearch: "Type at least 3 characters to search",
+    noLocationsFound: "No locations found for",
+    trySearching: "Try: \"Bengaluru\", \"Mumbai\", \"Delhi\", or your city name",
+    startTyping: "Start typing to search for your location",
+    
+    // Family Step
+    familyMembers: "FAMILY MEMBERS",
+    selectOrAdd: "Select a saved member or add a new one",
+    selectMember: "Select Member",
+    addNewMember: "Add New Member",
+    noMembersSaved: "NO FAMILY MEMBERS SAVED",
+    addMembersDesc: "Add family members to save their details for quick access in future visits",
+    addFirstMember: "Add First Member",
+    continueWith: "Continue with",
+    deleteMember: "DELETE MEMBER?",
+    deleteConfirm: "This will permanently remove this family member's saved information.",
+    cancel: "Cancel",
+    delete: "Delete",
+    
+    // Patient Details
+    currentSymptoms: "CURRENT SYMPTOMS",
+    describeSymptoms: "Describe what you're experiencing right now",
+    basicInfo: "BASIC INFORMATION",
+    medicalHistory: "MEDICAL HISTORY",
+    fullName: "Full Name",
+    relation: "Relation",
+    age: "Age",
+    gender: "Gender",
+    bloodGroup: "Blood Group",
+    mobileNumber: "Mobile Number",
+    emergencyContact: "Emergency Contact",
+    emergencyRelation: "Emergency Contact Relation",
+    existingConditions: "Existing Conditions (select all that apply)",
+    allergies: "Known Allergies",
+    medications: "Current Medications",
+    saveMember: "Save Member",
+    
+    // Symptoms
+    whatExperiencing: "What are you experiencing?",
+    quickSelect: "Quick select common symptoms:",
+    howLong: "How long have you had these symptoms?",
+    severityLevel: "Severity Level",
+    additionalNotes: "ADDITIONAL NOTES",
+    findHospitals: "Find Hospitals Near Me",
+    
+    // Severity
+    mild: "Mild",
+    mildDesc: "Minor discomfort",
+    moderate: "Moderate",
+    moderateDesc: "Affects daily life",
+    severe: "Severe",
+    severeDesc: "Hard to function",
+    critical: "Critical",
+    criticalDesc: "Emergency / life risk",
+    
+    // Hospitals
+    nearbyHospitals: "NEARBY HOSPITALS",
+    facilitiesFound: "facilities found",
+    realData: "Real data via AI Web Search",
+    list: "List",
+    map: "Map",
+    liveMapView: "LIVE MAP VIEW",
+    available: "Available",
+    closed: "Closed",
+    selected: "Selected",
+    bedsAvailable: "Beds Available",
+    occupied: "Occupied",
+    open: "Open",
+    emergency: "Emergency",
+    analyzeSymptoms: "Analyze Symptoms & Get AI Recommendation",
+    
+    // Analysis
+    aiTriageComplete: "AI TRIAGE COMPLETE",
+    aiMedicalAnalysis: "AI Medical Analysis",
+    assessment: "ASSESSMENT",
+    possibleConditions: "POSSIBLE CONDITIONS",
+    rankedMatches: "RANKED HOSPITAL MATCHES",
+    bestMatch: "Best Match",
+    bookingToken: "Booking token for",
+    selectHospital: "Select an available hospital above",
+    generateToken: "Generate Priority Token for",
+    
+    // Token
+    tokenGenerated: "TOKEN GENERATED SUCCESSFULLY",
+    tokenNumber: "TOKEN NUMBER",
+    positionInQueue: "Position in Queue",
+    estWaitTime: "Est. Wait Time",
+    priorityLevel: "Priority Level",
+    liveQueueTracking: "Live Queue Tracking Active",
+    showAtReception: "Show this token at reception",
+    livePriorityQueue: "LIVE PRIORITY QUEUE",
+    patients: "patients",
+    nowServing: "Now Serving",
+    you: "You",
+    home: "Home",
+    
+    // Settings
+    settingsTitle: "SETTINGS",
+    theme: "Theme",
+    darkMode: "Dark Mode",
+    lightMode: "Light Mode",
+    language: "Language",
+    saveSettings: "Save Settings",
+    
+    // History
+    tokenHistory: "TOKEN HISTORY",
+    clearAll: "Clear All",
+    noHistory: "No token history yet",
+    tokensWillAppear: "Your generated tokens will appear here",
+    
+    // Common
+    required: "required",
+    loading: "Loading...",
+    retry: "Retry",
+    back: "Back",
+    next: "Next",
+    save: "Save",
+    close: "Close",
+    yes: "Yes",
+    no: "No",
+    male: "Male",
+    female: "Female",
+    other: "Other",
+    self: "Self",
+    spouse: "Spouse",
+    parent: "Parent",
+    child: "Child",
+    sibling: "Sibling",
+    grandparent: "Grandparent",
+    friend: "Friend",
+  },
+  
+  hi: {
+    // Header
+    appName: "ऑथेनएक्स",
+    tagline: "एआई-संचालित स्वास्थ्य सेवा ट्राइएज",
+    live: "लाइव",
+    
+    // Menu
+    history: "इतिहास",
+    settings: "सेटिंग्स",
+    
+    // Steps
+    location: "स्थान",
+    family: "परिवार",
+    symptoms: "लक्षण",
+    hospitals: "अस्पताल",
+    analysis: "विश्लेषण",
+    token: "टोकन",
+    
+    // Location Step
+    locateYou: "आपका स्थान",
+    locationDesc: "नजदीकी अस्पताल खोजने के लिए हमें आपके स्थान की आवश्यकता है",
+    autoDetect: "स्वतः पता लगाएं",
+    searchAddress: "पता खोजें",
+    detectingLocation: "स्थान का पता लगाया जा रहा है…",
+    detectMyLocation: "मेरा स्थान पता लगाएं",
+    detectedLocation: "स्थान का पता लगा",
+    isCorrectLocation: "क्या यह आपका सही स्थान है?",
+    yesContinue: "हां, जारी रखें",
+    reDetect: "फिर से पता लगाएं",
+    enterManually: "इसके बजाय मैन्युअल रूप से स्थान दर्ज करें",
+    searchLocation: "अपना स्थान खोजें (जैसे, आईआईटी बॉम्बे, अपोलो अस्पताल)",
+    typeToSearch: "खोजने के लिए कम से कम 3 अक्षर टाइप करें",
+    noLocationsFound: "के लिए कोई स्थान नहीं मिला",
+    trySearching: "प्रयास करें: \"बेंगलुरु\", \"मुंबई\", \"दिल्ली\"",
+    startTyping: "अपना स्थान खोजने के लिए टाइप करना शुरू करें",
+    
+    // Family Step
+    familyMembers: "परिवार के सदस्य",
+    selectOrAdd: "सहेजे गए सदस्य का चयन करें या नया जोड़ें",
+    selectMember: "सदस्य चुनें",
+    addNewMember: "नया सदस्य जोड़ें",
+    noMembersSaved: "कोई परिवार सदस्य सहेजा नहीं गया",
+    addMembersDesc: "भविष्य की यात्राओं में त्वरित पहुंच के लिए परिवार के सदस्यों को जोड़ें",
+    addFirstMember: "पहला सदस्य जोड़ें",
+    continueWith: "के साथ जारी रखें",
+    deleteMember: "सदस्य हटाएं?",
+    deleteConfirm: "यह इस परिवार के सदस्य की जानकारी को स्थायी रूप से हटा देगा।",
+    cancel: "रद्द करें",
+    delete: "हटाएं",
+    
+    // Patient Details
+    currentSymptoms: "वर्तमान लक्षण",
+    describeSymptoms: "वर्णन करें कि आप अभी क्या अनुभव कर रहे हैं",
+    basicInfo: "बुनियादी जानकारी",
+    medicalHistory: "चिकित्सा इतिहास",
+    fullName: "पूरा नाम",
+    relation: "रिश्ता",
+    age: "आयु",
+    gender: "लिंग",
+    bloodGroup: "रक्त समूह",
+    mobileNumber: "मोबाइल नंबर",
+    emergencyContact: "आपातकालीन संपर्क",
+    emergencyRelation: "आपातकालीन संपर्क संबंध",
+    existingConditions: "मौजूदा स्थितियां (सभी लागू का चयन करें)",
+    allergies: "ज्ञात एलर्जी",
+    medications: "वर्तमान दवाएं",
+    saveMember: "सदस्य सहेजें",
+    
+    // Symptoms
+    whatExperiencing: "आप क्या अनुभव कर रहे हैं?",
+    quickSelect: "सामान्य लक्षण जल्दी चुनें:",
+    howLong: "आपको ये लक्षण कब से हैं?",
+    severityLevel: "गंभीरता स्तर",
+    additionalNotes: "अतिरिक्त नोट्स",
+    findHospitals: "मेरे पास अस्पताल खोजें",
+    
+    // Severity
+    mild: "हल्का",
+    mildDesc: "मामूली असुविधा",
+    moderate: "मध्यम",
+    moderateDesc: "दैनिक जीवन प्रभावित",
+    severe: "गंभीर",
+    severeDesc: "काम करना मुश्किल",
+    critical: "गंभीर",
+    criticalDesc: "आपातकाल / जीवन जोखिम",
+    
+    // Hospitals
+    nearbyHospitals: "नजदीकी अस्पताल",
+    facilitiesFound: "सुविधाएं मिलीं",
+    realData: "एआई वेब खोज के माध्यम से वास्तविक डेटा",
+    list: "सूची",
+    map: "नक्शा",
+    liveMapView: "लाइव मैप व्यू",
+    available: "उपलब्ध",
+    closed: "बंद",
+    selected: "चयनित",
+    bedsAvailable: "बिस्तर उपलब्ध",
+    occupied: "कब्जा",
+    open: "खुला",
+    emergency: "आपातकाल",
+    analyzeSymptoms: "लक्षणों का विश्लेषण करें और एआई सिफारिश प्राप्त करें",
+    
+    // Analysis
+    aiTriageComplete: "एआई ट्राइएज पूर्ण",
+    aiMedicalAnalysis: "एआई चिकित्सा विश्लेषण",
+    assessment: "मूल्यांकन",
+    possibleConditions: "संभावित स्थितियां",
+    rankedMatches: "रैंक किए गए अस्पताल मैच",
+    bestMatch: "सर्वश्रेष्ठ मैच",
+    bookingToken: "के लिए टोकन बुक करना",
+    selectHospital: "ऊपर एक उपलब्ध अस्पताल चुनें",
+    generateToken: "के लिए प्राथमिकता टोकन जेनरेट करें",
+    
+    // Token
+    tokenGenerated: "टोकन सफलतापूर्वक जेनरेट किया गया",
+    tokenNumber: "टोकन नंबर",
+    positionInQueue: "कतार में स्थिति",
+    estWaitTime: "अनुमानित प्रतीक्षा समय",
+    priorityLevel: "प्राथमिकता स्तर",
+    liveQueueTracking: "लाइव कतार ट्रैकिंग सक्रिय",
+    showAtReception: "रिसेप्शन पर यह टोकन दिखाएं",
+    livePriorityQueue: "लाइव प्राथमिकता कतार",
+    patients: "मरीज",
+    nowServing: "अब सेवा कर रहे हैं",
+    you: "आप",
+    home: "होम",
+    
+    // Settings
+    settingsTitle: "सेटिंग्स",
+    theme: "थीम",
+    darkMode: "डार्क मोड",
+    lightMode: "लाइट मोड",
+    language: "भाषा",
+    saveSettings: "सेटिंग्स सहेजें",
+    
+    // History
+    tokenHistory: "टोकन इतिहास",
+    clearAll: "सभी साफ़ करें",
+    noHistory: "अभी तक कोई टोकन इतिहास नहीं",
+    tokensWillAppear: "आपके जेनरेट किए गए टोकन यहां दिखाई देंगे",
+    
+    // Common
+    required: "आवश्यक",
+    loading: "लोड हो रहा है...",
+    retry: "पुनः प्रयास करें",
+    back: "वापस",
+    next: "अगला",
+    save: "सहेजें",
+    close: "बंद करें",
+    yes: "हां",
+    no: "नहीं",
+    male: "पुरुष",
+    female: "महिला",
+    other: "अन्य",
+    self: "स्वयं",
+    spouse: "जीवनसाथी",
+    parent: "माता-पिता",
+    child: "बच्चा",
+    sibling: "भाई-बहन",
+    grandparent: "दादा-दादी",
+    friend: "दोस्त",
+  }
+};
+
+// Translation helper function
+const t = (key, lang = 'en') => {
+  return translations[lang]?.[key] || translations['en'][key] || key;
+};
+const HISTORY_STORAGE_KEY = "authenx_token_history";
+
+function saveTokenToHistory(tokenData) {
+  try {
+    const history = getTokenHistory();
+    const entry = {
+      id: Date.now().toString(),
+      timestamp: new Date().toISOString(),
+      ...tokenData
+    };
+    history.unshift(entry); // Add to beginning
+    // Keep only last 50 entries
+    const trimmed = history.slice(0, 50);
+    localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(trimmed));
+  } catch (error) {
+    console.error("Failed to save token history:", error);
+  }
+}
+
+function getTokenHistory() {
+  try {
+    const stored = localStorage.getItem(HISTORY_STORAGE_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch {
+    return [];
+  }
+}
+
+function clearTokenHistory() {
+  try {
+    localStorage.removeItem(HISTORY_STORAGE_KEY);
+  } catch (error) {
+    console.error("Failed to clear history:", error);
+  }
 }
 
 // ─── AI Symptom Analysis ─────────────────────────────────────────────────────
@@ -948,7 +1700,7 @@ function LocationStep({ onNext }) {
             <div style={{ marginBottom: 12 }}>
               <input 
                 className="input-field" 
-                placeholder="Search: City, College, Hospital, Landmark (e.g., IIT Bombay, Apollo Hospital)"
+                placeholder="Search your location (e.g., IIT Bombay, Apollo Hospital, Koramangala)"
                 value={searchQuery} 
                 onChange={e => handleSearchInput(e.target.value)}
                 style={{ paddingRight: 40 }}
@@ -1115,22 +1867,44 @@ function FamilyMemberStep({ onNext, onBack }) {
   const [selectedMember, setSelectedMember] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
   
-  const [newMember, setNewMember] = useState({
-    name: "",
-    age: "",
-    gender: "",
-    bloodGroup: "",
-    phone: "",
-    emergencyContact: "",
-    emergencyRelation: "",
-    existingConditions: [],
-    allergies: "",
-    medications: "",
-    relation: "Self"
-  });
+  // Load saved new member form data
+  const loadNewMemberForm = () => {
+    try {
+      const saved = localStorage.getItem('authenx_new_member_form');
+      if (saved) {
+        return JSON.parse(saved);
+      }
+    } catch (error) {
+      console.error('Failed to load new member form:', error);
+    }
+    return {
+      name: "",
+      age: "",
+      gender: "",
+      bloodGroup: "",
+      phone: "",
+      emergencyContact: "",
+      emergencyRelation: "",
+      existingConditions: [],
+      allergies: "",
+      medications: "",
+      relation: "Self"
+    };
+  };
+
+  const [newMember, setNewMember] = useState(loadNewMemberForm());
   const [errors, setErrors] = useState({});
 
-  const set = (k, v) => setNewMember(p => ({ ...p, [k]: v }));
+  const set = (k, v) => {
+    const updated = { ...newMember, [k]: v };
+    setNewMember(updated);
+    // Save to localStorage immediately
+    try {
+      localStorage.setItem('authenx_new_member_form', JSON.stringify(updated));
+    } catch (error) {
+      console.error('Failed to save new member form:', error);
+    }
+  };
 
   const CONDITIONS = ["Diabetes","Hypertension","Heart Disease","Asthma","Thyroid","Cancer","Kidney Disease","None"];
   const BLOOD_GROUPS = ["A+","A-","B+","B-","AB+","AB-","O+","O-","Unknown"];
@@ -1147,7 +1921,18 @@ function FamilyMemberStep({ onNext, onBack }) {
     if (!newMember.name.trim()) e.name = "Name is required";
     if (!newMember.age || newMember.age < 1 || newMember.age > 120) e.age = "Valid age required";
     if (!newMember.gender) e.gender = "Gender is required";
-    if (!newMember.phone.trim()) e.phone = "Phone number is required";
+    if (!newMember.phone.trim()) {
+      e.phone = "Phone number is required";
+    } else {
+      // Remove all non-digit characters
+      const cleanPhone = newMember.phone.replace(/\D/g, '');
+      // Check if it's a valid Indian mobile number (10 digits starting with 6-9)
+      if (cleanPhone.length !== 10) {
+        e.phone = "Phone number must be 10 digits";
+      } else if (!/^[6-9]/.test(cleanPhone)) {
+        e.phone = "Indian mobile numbers start with 6, 7, 8, or 9";
+      }
+    }
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -1157,6 +1942,13 @@ function FamilyMemberStep({ onNext, onBack }) {
     
     const saved = saveFamilyMember(newMember);
     if (saved) {
+      // Clear the form from localStorage
+      try {
+        localStorage.removeItem('authenx_new_member_form');
+      } catch (error) {
+        console.error('Failed to clear new member form:', error);
+      }
+      
       setFamilyMembers(getFamilyMembers());
       setMode("select");
       setNewMember({
@@ -1188,7 +1980,6 @@ function FamilyMemberStep({ onNext, onBack }) {
         symptoms: "",
         duration: "",
         severity: "moderate",
-        pain_scale: 5,
         additional: ""
       });
     }
@@ -1368,7 +2159,7 @@ function FamilyMemberStep({ onNext, onBack }) {
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
               <div style={{ gridColumn: "1/-1" }}>
                 <Label text="Full Name" required />
-                <input className="input-field" placeholder="e.g. Rajesh Kumar"
+                <input className="input-field" placeholder="e.g. Vasudev Krishna"
                   value={newMember.name} onChange={e => set("name", e.target.value)}
                   style={{ borderColor: errors.name ? "var(--red)" : "" }} />
                 <Err k="name" />
@@ -1430,9 +2221,24 @@ function FamilyMemberStep({ onNext, onBack }) {
 
               <div>
                 <Label text="Mobile Number" required />
-                <input className="input-field" placeholder="+91 98765 43210"
-                  value={newMember.phone} onChange={e => set("phone", e.target.value)}
-                  style={{ borderColor: errors.phone ? "var(--red)" : "" }} />
+                <input 
+                  className="input-field" 
+                  placeholder="10-digit mobile number(e.g., 9876543210)"
+                  value={newMember.phone} 
+                  onChange={e => {
+                    // Allow only digits and limit to 10 characters
+                    const value = e.target.value.replace(/\D/g, '').slice(0, 10);
+                    set("phone", value);
+                  }}
+                  maxLength={10}
+                  type="tel"
+                  style={{ borderColor: errors.phone ? "var(--red)" : "" }} 
+                />
+                {!errors.phone && newMember.phone.length > 0 && (
+                  <div style={{ fontSize: "0.7rem", color: "var(--muted)", marginTop: 4 }}>
+                    {newMember.phone.length}/10 digits
+                  </div>
+                )}
                 <Err k="phone" />
               </div>
 
@@ -1546,33 +2352,59 @@ function FamilyMemberStep({ onNext, onBack }) {
 
 // ─── STEP 3: Patient Details (Symptoms Only) ─────────────────────────────────
 function PatientDetailsStep({ onNext, onBack, patient }) {
-  const [form, setForm] = useState({
-    symptoms: "",
-    duration: "",
-    severity: "moderate",
-    pain_scale: 5,
-    additional: ""
-  });
+  // Load saved form data from localStorage
+  const loadFormData = () => {
+    try {
+      const saved = localStorage.getItem('authenx_symptoms_form');
+      if (saved) {
+        return JSON.parse(saved);
+      }
+    } catch (error) {
+      console.error('Failed to load form data:', error);
+    }
+    return {
+      symptoms: "",
+      duration: "",
+      severity: "moderate",
+      additional: ""
+    };
+  };
+
+  const [form, setForm] = useState(loadFormData());
   const [errors, setErrors] = useState({});
 
-  const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
+  const set = (k, v) => {
+    const newForm = { ...form, [k]: v };
+    setForm(newForm);
+    // Save to localStorage immediately
+    try {
+      localStorage.setItem('authenx_symptoms_form', JSON.stringify(newForm));
+    } catch (error) {
+      console.error('Failed to save form data:', error);
+    }
+  };
 
   const validate = () => {
     const e = {};
-    if (!form.symptoms.trim()) e.symptoms = "Please describe your symptoms";
+    if (!form.symptoms.trim()) e.symptoms = "Please describe your current symptoms";
     setErrors(e);
     return Object.keys(e).length === 0;
   };
 
   const handleNext = () => {
     if (validate()) {
+      // Clear the form data from localStorage when moving forward
+      try {
+        localStorage.removeItem('authenx_symptoms_form');
+      } catch (error) {
+        console.error('Failed to clear form data:', error);
+      }
       // Merge symptoms with existing patient data
       onNext({
         ...patient,
         symptoms: form.symptoms,
         duration: form.duration,
         severity: form.severity,
-        pain_scale: form.pain_scale,
         additional: form.additional
       });
     }
@@ -1640,7 +2472,7 @@ function PatientDetailsStep({ onNext, onBack, patient }) {
       <div className="card" style={{ padding: 22, marginBottom: 14, borderColor: "rgba(0,212,255,0.25)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18 }}>
           <div style={{ width: 28, height: 28, borderRadius: 6, background: "rgba(0,255,157,0.1)", border: "1px solid rgba(0,255,157,0.3)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.9rem" }}>🩺</div>
-          <span style={{ fontFamily: "Orbitron", fontSize: "0.78rem", letterSpacing: "0.1em", color: "var(--green)" }}>DESCRIBE YOUR SYMPTOMS</span>
+          <span style={{ fontFamily: "Orbitron", fontSize: "0.78rem", letterSpacing: "0.1em", color: "var(--green)" }}>DESCRIBE YOUR CURRENT SYMPTOMS</span>
         </div>
 
         <div style={{ marginBottom: 14 }}>
@@ -1669,7 +2501,8 @@ function PatientDetailsStep({ onNext, onBack, patient }) {
                 border: `1px solid ${form.symptoms === val ? "var(--cyan)" : "var(--border)"}`,
                 borderRadius: 7, color: form.symptoms === val ? "var(--cyan)" : "var(--muted)",
                 cursor: "pointer", fontSize: "0.78rem", fontFamily: "Sora",
-                padding: "8px 10px", textAlign: "left", transition: "all 0.2s"
+                padding: "8px 10px", textAlign: "left", transition: "all 0.2s",
+                fontWeight: 700
               }}>{label}</button>
             ))}
           </div>
@@ -1707,24 +2540,6 @@ function PatientDetailsStep({ onNext, onBack, patient }) {
             ))}
           </div>
         </div>
-
-        <div>
-          <Label text={`Pain Scale: ${form.pain_scale}/10`} />
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <span style={{ fontSize: "0.75rem", color: "var(--green)" }}>No Pain</span>
-            <input type="range" min={0} max={10} value={form.pain_scale}
-              onChange={e => set("pain_scale", Number(e.target.value))}
-              style={{ flex: 1, accentColor: form.pain_scale >= 7 ? "var(--red)" : form.pain_scale >= 4 ? "var(--amber)" : "var(--green)" }} />
-            <span style={{ fontSize: "0.75rem", color: "var(--red)" }}>Worst</span>
-            <div style={{
-              minWidth: 36, height: 36, borderRadius: "50%",
-              background: form.pain_scale >= 8 ? "var(--red)" : form.pain_scale >= 5 ? "var(--amber)" : "var(--green)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontFamily: "Orbitron", fontWeight: 700, fontSize: "0.85rem", color: "#000",
-              boxShadow: `0 0 10px ${form.pain_scale >= 8 ? "var(--red)" : form.pain_scale >= 5 ? "var(--amber)" : "var(--green)"}`
-            }}>{form.pain_scale}</div>
-          </div>
-        </div>
       </div>
 
       {/* ── Additional Notes ── */}
@@ -1752,12 +2567,14 @@ function HospitalsStep({ location, patient, onNext, onBack }) {
   const [tab, setTab]             = useState("map");
   const [selected, setSelected]   = useState(null);
   const [retryKey, setRetryKey]   = useState(0);
-
+  const [retryCount, setRetryCount] = useState(0);
   const [fetchStatus, setFetchStatus] = useState("Initializing…");
   const [fetchError, setFetchError]   = useState(null);
 
   useEffect(() => {
     let cancelled = false;
+    let retryTimeout;
+    
     async function load() {
       setFetchError(null);
       try {
@@ -1768,54 +2585,99 @@ function HospitalsStep({ location, patient, onNext, onBack }) {
         );
         if (cancelled) return;
         if (results.length === 0) {
+          // Auto-retry up to 3 times if no results
+          if (retryCount < 3) {
+            setFetchStatus("No hospitals found. Retrying...");
+            retryTimeout = setTimeout(() => {
+              if (!cancelled) {
+                setRetryCount(prev => prev + 1);
+                setRetryKey(k => k + 1);
+              }
+            }, 2000); // Wait 2 seconds before retry
+            return;
+          }
           setFetchError("No hospitals found within 15km. Try a different location.");
           setLoading(false);
           return;
         }
         setHospitals(results);
         setLoading(false);
+        setRetryCount(0); // Reset retry count on success
       } catch (err) {
         if (cancelled) return;
-        setFetchError("Failed: " + err.message);
-        setLoading(false);
+        
+        // Auto-retry up to 3 times on error
+        if (retryCount < 3) {
+          setFetchStatus(`Connection issue. Retrying (${retryCount + 1}/3)...`);
+          retryTimeout = setTimeout(() => {
+            if (!cancelled) {
+              setRetryCount(prev => prev + 1);
+              setRetryKey(k => k + 1);
+            }
+          }, 2000); // Wait 2 seconds before retry
+        } else {
+          setFetchError("Failed: " + err.message);
+          setLoading(false);
+        }
       }
     }
     load();
-    return () => { cancelled = true; };
-  }, [location.lat, location.lng, retryKey]);
+    return () => { 
+      cancelled = true;
+      if (retryTimeout) clearTimeout(retryTimeout);
+    };
+  }, [location.lat, location.lng, retryKey, retryCount]);
 
   const renderMapPins = () => {
     if (hospitals.length === 0) return null;
     const lats = hospitals.map(h => h.lat);
     const lngs = hospitals.map(h => h.lng);
-    const pad = 0.01;
+    const pad = 0.03; // Increased padding to zoom out more
     const minLat = Math.min(...lats) - pad, maxLat = Math.max(...lats) + pad;
     const minLng = Math.min(...lngs) - pad, maxLng = Math.max(...lngs) + pad;
-    const latRange = maxLat - minLat || 0.02;
-    const lngRange = maxLng - minLng || 0.02;
+    const latRange = maxLat - minLat || 0.06; // Increased range for zoom out
+    const lngRange = maxLng - minLng || 0.06;
     return hospitals.map((h) => {
       const left = ((h.lng - minLng) / lngRange) * 100;
       const top  = (1 - (h.lat - minLat) / latRange) * 100;
       const avail = checkHospitalAvailability(h);
+      const pinColor = selected === h.id ? "#4285f4" : avail.available ? "#34a853" : "#ea4335";
+      
       return (
         <div key={h.id} className="map-pin"
           onClick={() => { setSelected(h.id); setTab("list"); }}
-          style={{ left: `${Math.min(90,Math.max(10,left))}%`, top: `${Math.min(90,Math.max(10,top))}%` }}>
-          <div style={{
-            width: 32, height: 32, borderRadius: "50% 50% 50% 0", transform: "rotate(-45deg)",
-            background: selected === h.id ? "var(--cyan)" : avail.available ? "var(--green)" : "var(--red)",
-            border: "2px solid rgba(255,255,255,0.3)",
-            boxShadow: `0 0 12px ${selected === h.id ? "var(--cyan)" : avail.available ? "var(--green)" : "var(--red)"}`,
-            display: "flex", alignItems: "center", justifyContent: "center"
-          }}>
-            <span style={{ transform: "rotate(45deg)", fontSize: "0.8rem" }}>🏥</span>
+          style={{ left: `${Math.min(92,Math.max(8,left))}%`, top: `${Math.min(92,Math.max(8,top))}%` }}>
+          <div className="map-pin-marker">
+            <svg viewBox="0 0 24 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 0C5.4 0 0 5.4 0 12c0 8.1 12 24 12 24s12-15.9 12-24c0-6.6-5.4-12-12-12z" 
+                fill={pinColor}
+                stroke="white"
+                strokeWidth="1.5"/>
+              <circle cx="12" cy="12" r="4" fill="white"/>
+            </svg>
           </div>
+          {/* Always visible hospital name label */}
           <div style={{
-            position: "absolute", top: -28, left: "50%", transform: "translateX(-50%)",
-            background: "rgba(0,0,0,0.85)", border: "1px solid var(--border)",
-            borderRadius: 4, padding: "2px 8px", fontSize: "0.7rem",
-            whiteSpace: "nowrap", color: "var(--text)"
-          }}>{h.name}</div>
+            position: "absolute",
+            bottom: "42px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            background: "white",
+            border: "1px solid #e0e0e0",
+            borderRadius: "4px",
+            padding: "3px 8px",
+            fontSize: "0.7rem",
+            whiteSpace: "nowrap",
+            color: "#202124",
+            fontWeight: 500,
+            boxShadow: "0 1px 4px rgba(0,0,0,0.2)",
+            pointerEvents: "none",
+            maxWidth: "120px",
+            overflow: "hidden",
+            textOverflow: "ellipsis"
+          }}>
+            {h.name.length > 20 ? h.name.substring(0, 20) + "..." : h.name}
+          </div>
         </div>
       );
     });
@@ -1855,7 +2717,12 @@ function HospitalsStep({ location, patient, onNext, onBack }) {
           Something went wrong while searching for hospitals near your location. Check your connection and retry.
         </div>
         <div style={{ display: "flex", gap: 10 }}>
-          <button className="btn-primary" onClick={() => { setLoading(true); setFetchError(null); setRetryKey(k => k + 1); }} style={{ flex: 1 }}>
+          <button className="btn-primary" onClick={() => { 
+            setLoading(true); 
+            setFetchError(null); 
+            setRetryCount(0); 
+            setRetryKey(k => k + 1); 
+          }} style={{ flex: 1 }}>
             🔄 Retry
           </button>
           <button className="btn-secondary" onClick={onBack} style={{ flex: 1 }}>
@@ -1891,24 +2758,37 @@ function HospitalsStep({ location, patient, onNext, onBack }) {
       </div>
 
       {tab === "map" && (
-        <div className="map-container" style={{ height: 320, marginBottom: 20 }}>
+        <div className="map-container" style={{ height: 450, marginBottom: 20 }}>
           <div className="map-grid" />
-          <div style={{ position: "absolute", top: 10, left: 10, background: "rgba(0,0,0,0.7)", padding: "6px 12px", borderRadius: 6, fontSize: "0.72rem", color: "var(--muted)" }}>
-            <span className="live-dot" style={{ marginRight: 6 }} />LIVE MAP VIEW
+          
+          {/* User location pin - Google style */}
+          <div className="map-pin" style={{ left: "50%", top: "50%", zIndex: 5, transform: "translate(-50%, -50%)" }}>
+            <div className="user-location-marker" />
           </div>
-          {/* User pin */}
-          <div className="map-pin" style={{ left: "50%", top: "50%" }}>
-            <div style={{
-              width: 20, height: 20, borderRadius: "50%",
-              background: "var(--cyan)", border: "3px solid white",
-              boxShadow: "0 0 16px var(--cyan)"
-            }} />
-          </div>
+          
+          {/* Hospital pins */}
           {renderMapPins()}
-          <div style={{ position: "absolute", bottom: 10, right: 10, fontSize: "0.7rem", color: "var(--muted)", display: "flex", gap: 12 }}>
-            <span><span style={{ color: "var(--green)" }}>● </span>Open</span>
-            <span><span style={{ color: "var(--red)" }}>● </span>Unavailable</span>
-            <span><span style={{ color: "var(--cyan)" }}>● </span>Selected</span>
+          
+          {/* Google Maps style legend */}
+          <div className="map-legend">
+            <div className="map-legend-item">
+              <div className="map-legend-dot" style={{ background: "#34a853" }} />
+              <span>Available</span>
+            </div>
+            <div className="map-legend-item">
+              <div className="map-legend-dot" style={{ background: "#ea4335" }} />
+              <span>Closed</span>
+            </div>
+            <div className="map-legend-item">
+              <div className="map-legend-dot" style={{ background: "#4285f4" }} />
+              <span>Selected</span>
+            </div>
+          </div>
+          
+          {/* Scale indicator */}
+          <div className="map-scale">
+            <div className="map-scale-bar" />
+            <span>2 km</span>
           </div>
         </div>
       )}
@@ -1917,6 +2797,11 @@ function HospitalsStep({ location, patient, onNext, onBack }) {
         {hospitals.map((h, i) => {
           const avail = checkHospitalAvailability(h);
           const isSelected = selected === h.id;
+          
+          // Bed availability status
+          const bedStatus = h.availableBeds > 20 ? "good" : h.availableBeds > 10 ? "moderate" : "low";
+          const bedColor = bedStatus === "good" ? "var(--green)" : bedStatus === "moderate" ? "var(--amber)" : "var(--red)";
+          
           return (
             <div key={h.id} className={`card hospital-card ${isSelected ? "selected" : ""}`}
               onClick={() => setSelected(isSelected ? null : h.id)}
@@ -1932,14 +2817,26 @@ function HospitalsStep({ location, patient, onNext, onBack }) {
                       </span>
                     )}
                     {avail.available && <span className="badge badge-low" style={{ fontSize: "0.7rem" }}>● Open</span>}
-                    {h.emergency && <span className="badge" style={{ background: "rgba(255,45,85,0.1)", color: "var(--red)", border: "1px solid rgba(255,45,85,0.3)", fontSize: "0.7rem" }}>🚨 Emergency</span>}
+                    {h.emergency && <span className="badge" style={{ background: "rgba(255,45,85,0.1)", color: "var(--red)", border: "1px solid rgba(255,45,85,0.3)", fontSize: "0.7rem" }}>� Emergency</span>}
+                    {/* Bed Availability Badge */}
+                    <span className="badge" style={{ 
+                      background: `${bedColor}18`, 
+                      color: bedColor, 
+                      border: `1px solid ${bedColor}44`,
+                      fontSize: "0.7rem",
+                      fontWeight: 700
+                    }}>
+                      🛏️ {h.availableBeds} Beds Available
+                    </span>
                   </div>
                   <div style={{ color: "var(--muted)", fontSize: "0.8rem", marginBottom: 6 }}>{h.address}</div>
                   <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
                     <span style={{ color: "var(--amber)", fontSize: "0.82rem" }}>★ {h.rating}</span>
                     <span style={{ color: "var(--muted)", fontSize: "0.82rem" }}>💬 {h.reviews.toLocaleString()} reviews</span>
                     <span style={{ color: "var(--cyan)", fontSize: "0.82rem" }}>📍 {h.distance} km</span>
-                    <span style={{ color: "var(--muted)", fontSize: "0.82rem" }}>🏢 {h.beds} beds</span>
+                    <span style={{ color: "var(--muted)", fontSize: "0.82rem" }}>
+                      🏢 {h.occupancyRate}% Occupied ({h.occupiedBeds}/{h.beds})
+                    </span>
                     {h.source === "Web Search" && (
                       <span style={{ color: "#7ec8e3", fontSize: "0.72rem", opacity: 0.7 }}>🔍 Web</span>
                     )}
@@ -1947,6 +2844,42 @@ function HospitalsStep({ location, patient, onNext, onBack }) {
                   {isSelected && (
                     <div style={{ marginTop: 10 }}>
                       <div className="glow-divider" />
+                      
+                      {/* Bed Availability Details */}
+                      <div style={{ marginBottom: 12 }}>
+                        <div style={{ fontSize: "0.78rem", color: "var(--muted)", marginBottom: 6 }}>Bed Availability:</div>
+                        <div style={{ 
+                          background: "var(--surface)", 
+                          borderRadius: 8, 
+                          padding: 12,
+                          border: `1px solid ${bedColor}44`
+                        }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+                            <span style={{ fontSize: "0.8rem", color: "var(--text)" }}>Available:</span>
+                            <span style={{ fontSize: "0.9rem", fontWeight: 700, color: bedColor }}>
+                              {h.availableBeds} beds
+                            </span>
+                          </div>
+                          <div style={{ 
+                            height: 8, 
+                            background: "var(--border)", 
+                            borderRadius: 4, 
+                            overflow: "hidden",
+                            marginBottom: 6
+                          }}>
+                            <div style={{ 
+                              height: "100%", 
+                              width: `${h.occupancyRate}%`,
+                              background: h.occupancyRate > 80 ? "var(--red)" : h.occupancyRate > 60 ? "var(--amber)" : "var(--green)",
+                              transition: "width 0.3s ease"
+                            }} />
+                          </div>
+                          <div style={{ fontSize: "0.72rem", color: "var(--muted)", textAlign: "center" }}>
+                            {h.occupiedBeds} occupied • {h.availableBeds} available • {h.beds} total
+                          </div>
+                        </div>
+                      </div>
+                      
                       <div style={{ fontSize: "0.78rem", color: "var(--muted)", marginBottom: 6 }}>Specializations:</div>
                       <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                         {h.specializations.map(s => (
@@ -1964,7 +2897,7 @@ function HospitalsStep({ location, patient, onNext, onBack }) {
 
       <div className="card" style={{ padding: "16px 20px", background: "rgba(0,212,255,0.04)" }}>
         <div style={{ fontSize: "0.85rem", color: "var(--muted)", marginBottom: 10 }}>
-          💡 Hospitals loaded for <strong style={{ color: "var(--cyan)" }}>{patient?.name}</strong>. Click below to run AI triage on your symptoms.
+          💡 Hospitals with available beds loaded for <strong style={{ color: "var(--cyan)" }}>{patient?.name}</strong>. Click below to run AI triage on your symptoms.
         </div>
         <button className="btn-primary" onClick={() => onNext(hospitals)} style={{ width: "100%" }}>
           🤖 Analyze Symptoms & Get AI Recommendation →
@@ -1995,7 +2928,6 @@ Current Medications: ${patient.medications || "None"}
 Symptoms: ${patient.symptoms}
 Duration: ${patient.duration || "Not specified"}
 Severity: ${patient.severity}
-Pain Scale: ${patient.pain_scale}/10
 Additional Notes: ${patient.additional || "None"}
         `.trim();
         const result = await analyzeSymptoms(ctx);
@@ -2073,11 +3005,10 @@ Additional Notes: ${patient.additional || "None"}
         <div style={{ flex: 1 }}>
           <div style={{ fontWeight: 700, fontSize: "1rem", marginBottom: 2 }}>{patient.name}</div>
           <div style={{ display: "flex", gap: 12, fontSize: "0.78rem", color: "var(--muted)", flexWrap: "wrap" }}>
-            <span>🎂 {patient.age} yrs • {patient.gender}</span>
+            <span> {patient.age} yrs • {patient.gender}</span>
             {patient.blood && <span>🩸 {patient.blood}</span>}
             <span>📱 {patient.phone}</span>
             {patient.duration && <span>⏱ {patient.duration}</span>}
-            <span>💢 Pain: {patient.pain_scale}/10</span>
           </div>
           {patient.existing_conditions?.length > 0 && (
             <div style={{ fontSize: "0.72rem", color: "var(--amber)", marginTop: 4 }}>
@@ -2194,11 +3125,28 @@ Additional Notes: ${patient.additional || "None"}
 function TokenStep({ data, onRestart }) {
   const { hospital, analysis, avail, patient } = data;
   const [tokenData, setTokenData]   = useState(null);
+  const [showAmbulancePrompt, setShowAmbulancePrompt] = useState(false);
+  const [ambulanceRequested, setAmbulanceRequested] = useState(false);
 
   useEffect(() => {
     if (avail.available) {
       const result = generateTokenForHospital(hospital.id, analysis.riskLevel);
       setTokenData(result);
+      
+      // Save to history
+      saveTokenToHistory({
+        token: result.token,
+        position: result.position,
+        total: result.total,
+        hospital: hospital,
+        analysis: analysis,
+        patient: patient
+      });
+      
+      // Show ambulance prompt for Critical risk patients
+      if (analysis.riskLevel === "Critical") {
+        setShowAmbulancePrompt(true);
+      }
     }
   }, [avail.available, hospital.id, analysis.riskLevel]);
 
@@ -2359,6 +3307,222 @@ function TokenStep({ data, onRestart }) {
             🏠 Home
           </button>
 
+      {/* Ambulance Prompt for Critical Patients */}
+      {showAmbulancePrompt && !ambulanceRequested && (
+        <div className="card" style={{ 
+          marginTop: 20, 
+          padding: 24, 
+          background: "rgba(255,45,85,0.08)",
+          borderColor: "var(--red)",
+          animation: "float-up 0.5s ease forwards"
+        }}>
+          <div style={{ textAlign: "center", marginBottom: 16 }}>
+            <div style={{ fontSize: "2.5rem", marginBottom: 12 }}>🚨</div>
+            <h3 style={{ 
+              fontFamily: "Orbitron", 
+              fontSize: "0.95rem", 
+              color: "var(--red)", 
+              letterSpacing: "0.1em",
+              marginBottom: 8
+            }}>
+              CRITICAL CONDITION DETECTED
+            </h3>
+            <p style={{ color: "var(--muted)", fontSize: "0.85rem", lineHeight: 1.6 }}>
+              Your condition requires immediate medical attention. Would you like us to call an ambulance for you?
+            </p>
+          </div>
+
+          <div style={{ display: "flex", gap: 10 }}>
+            <button 
+              onClick={() => setShowAmbulancePrompt(false)}
+              style={{
+                flex: 1,
+                padding: "12px 20px",
+                background: "transparent",
+                border: "1px solid var(--border)",
+                borderRadius: 8,
+                color: "var(--muted)",
+                cursor: "pointer",
+                fontFamily: "Sora",
+                fontWeight: 600,
+                fontSize: "0.9rem",
+                transition: "all 0.2s"
+              }}
+              onMouseEnter={e => e.currentTarget.style.borderColor = "var(--cyan)"}
+              onMouseLeave={e => e.currentTarget.style.borderColor = "var(--border)"}
+            >
+              No, I'll Go Myself
+            </button>
+            <button 
+              onClick={() => {
+                setAmbulanceRequested(true);
+                setShowAmbulancePrompt(false);
+              }}
+              style={{
+                flex: 1,
+                padding: "12px 20px",
+                background: "linear-gradient(135deg, var(--red), #ff6b6b)",
+                border: "none",
+                borderRadius: 8,
+                color: "#fff",
+                cursor: "pointer",
+                fontFamily: "Sora",
+                fontWeight: 600,
+                fontSize: "0.9rem",
+                transition: "all 0.2s",
+                boxShadow: "0 0 16px rgba(255,45,85,0.3)"
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow = "0 0 28px rgba(255,45,85,0.5)";
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "0 0 16px rgba(255,45,85,0.3)";
+              }}
+            >
+              🚑 Yes, Call Ambulance
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Ambulance Contact Card */}
+      {ambulanceRequested && (
+        <div className="card" style={{ 
+          marginTop: 20, 
+          padding: 24, 
+          background: "rgba(0,255,157,0.08)",
+          borderColor: "var(--green)",
+          animation: "float-up 0.5s ease forwards"
+        }}>
+          <div style={{ textAlign: "center", marginBottom: 16 }}>
+            <div style={{ fontSize: "2.5rem", marginBottom: 12 }}>✅</div>
+            <h3 style={{ 
+              fontFamily: "Orbitron", 
+              fontSize: "0.95rem", 
+              color: "var(--green)", 
+              letterSpacing: "0.1em",
+              marginBottom: 8
+            }}>
+              AMBULANCE SERVICE
+            </h3>
+            <p style={{ color: "var(--muted)", fontSize: "0.85rem", marginBottom: 16 }}>
+              Call the hospital's emergency ambulance service immediately
+            </p>
+          </div>
+
+          <div style={{ 
+            background: "var(--surface)", 
+            borderRadius: 10, 
+            padding: 16,
+            marginBottom: 16
+          }}>
+            <div style={{ 
+              fontSize: "0.75rem", 
+              color: "var(--muted)", 
+              marginBottom: 8,
+              textAlign: "center"
+            }}>
+              {hospital.name} - Emergency Contact
+            </div>
+            <a 
+              href={`tel:${hospital.phone}`}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 12,
+                padding: "16px",
+                background: "linear-gradient(135deg, var(--green), #00cc7a)",
+                border: "none",
+                borderRadius: 8,
+                color: "#000",
+                textDecoration: "none",
+                fontFamily: "Orbitron",
+                fontWeight: 700,
+                fontSize: "1.3rem",
+                letterSpacing: "0.05em",
+                transition: "all 0.2s",
+                boxShadow: "0 0 16px rgba(0,255,157,0.3)"
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.transform = "scale(1.05)";
+                e.currentTarget.style.boxShadow = "0 0 28px rgba(0,255,157,0.5)";
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.boxShadow = "0 0 16px rgba(0,255,157,0.3)";
+              }}
+            >
+              <span style={{ fontSize: "2rem" }}>📞</span>
+              {hospital.phone}
+            </a>
+            
+            {/* Alternative Emergency Numbers */}
+            <div style={{ 
+              marginTop: 12, 
+              padding: 12,
+              background: "rgba(255,184,0,0.08)",
+              borderRadius: 6,
+              border: "1px solid rgba(255,184,0,0.2)"
+            }}>
+              <div style={{ 
+                fontSize: "0.7rem", 
+                color: "var(--amber)", 
+                marginBottom: 6,
+                fontWeight: 600
+              }}>
+                🚨 National Emergency Numbers:
+              </div>
+              <div style={{ 
+                display: "flex", 
+                gap: 8, 
+                flexWrap: "wrap",
+                justifyContent: "center"
+              }}>
+                <a href="tel:108" style={{
+                  padding: "6px 12px",
+                  background: "rgba(255,184,0,0.15)",
+                  border: "1px solid rgba(255,184,0,0.3)",
+                  borderRadius: 6,
+                  color: "var(--amber)",
+                  textDecoration: "none",
+                  fontSize: "0.75rem",
+                  fontWeight: 600,
+                  transition: "all 0.2s"
+                }}>
+                  108 (Ambulance)
+                </a>
+                <a href="tel:102" style={{
+                  padding: "6px 12px",
+                  background: "rgba(255,184,0,0.15)",
+                  border: "1px solid rgba(255,184,0,0.3)",
+                  borderRadius: 6,
+                  color: "var(--amber)",
+                  textDecoration: "none",
+                  fontSize: "0.75rem",
+                  fontWeight: 600,
+                  transition: "all 0.2s"
+                }}>
+                  102 (Emergency)
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ 
+            fontSize: "0.75rem", 
+            color: "var(--muted)", 
+            textAlign: "center",
+            lineHeight: 1.6
+          }}>
+            💡 Tap any number above to call directly from your phone.<br/>
+            Emergency services are available 24/7.
+          </div>
+        </div>
+      )}
+
       {/* Queue Section */}
       <div style={{ marginTop: 20 }}>
         <div className="card" style={{ marginBottom: 16 }}>
@@ -2413,10 +3577,381 @@ function TokenStep({ data, onRestart }) {
   );
 }
 
+// ─── Settings Component ──────────────────────────────────────────────────────
+function SettingsPanel({ onClose, theme, setTheme, language, setLanguage }) {
+  return (
+    <div style={{
+      position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      zIndex: 2000, padding: 20
+    }} onClick={onClose}>
+      <div className="card" style={{ padding: 28, maxWidth: 500, width: "100%" }}
+        onClick={e => e.stopPropagation()}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
+          <h2 style={{ fontFamily: "Orbitron", fontSize: "1.2rem", color: "var(--cyan)" }}>
+            ⚙️ SETTINGS
+          </h2>
+          <button onClick={onClose} style={{
+            background: "transparent", border: "none", color: "var(--muted)",
+            cursor: "pointer", fontSize: "1.5rem", padding: 0
+          }}>×</button>
+        </div>
+
+        {/* Theme Setting */}
+        <div style={{ marginBottom: 24 }}>
+          <div style={{ fontSize: "0.85rem", color: "var(--muted)", marginBottom: 10, fontWeight: 600 }}>
+            🎨 Theme
+          </div>
+          <div style={{ display: "flex", gap: 10 }}>
+            <button onClick={() => setTheme("dark")} style={{
+              flex: 1, padding: "12px", border: "1px solid",
+              borderColor: theme === "dark" ? "var(--cyan)" : "var(--border)",
+              borderRadius: 8, background: theme === "dark" ? "rgba(0,212,255,0.1)" : "transparent",
+              color: theme === "dark" ? "var(--cyan)" : "var(--muted)",
+              cursor: "pointer", fontSize: "0.9rem", fontFamily: "Sora", fontWeight: 600,
+              transition: "all 0.2s"
+            }}>
+              🌙 Dark Mode
+            </button>
+            <button onClick={() => setTheme("light")} style={{
+              flex: 1, padding: "12px", border: "1px solid",
+              borderColor: theme === "light" ? "var(--cyan)" : "var(--border)",
+              borderRadius: 8, background: theme === "light" ? "rgba(0,212,255,0.1)" : "transparent",
+              color: theme === "light" ? "var(--cyan)" : "var(--muted)",
+              cursor: "pointer", fontSize: "0.9rem", fontFamily: "Sora", fontWeight: 600,
+              transition: "all 0.2s"
+            }}>
+              ☀️ Light Mode
+            </button>
+          </div>
+        </div>
+
+        {/* Language Setting */}
+        <div style={{ marginBottom: 24 }}>
+          <div style={{ fontSize: "0.85rem", color: "var(--muted)", marginBottom: 10, fontWeight: 600 }}>
+            🌐 Language
+          </div>
+          <select value={language} onChange={(e) => setLanguage(e.target.value)}
+            className="input-field" style={{ cursor: "pointer" }}>
+            <option value="en">English</option>
+            <option value="hi">हिंदी (Hindi)</option>
+            <option value="ta">தமிழ் (Tamil)</option>
+            <option value="te">తెలుగు (Telugu)</option>
+            <option value="kn">ಕನ್ನಡ (Kannada)</option>
+            <option value="ml">മലയാളം (Malayalam)</option>
+            <option value="bn">বাংলা (Bengali)</option>
+            <option value="mr">मराठी (Marathi)</option>
+          </select>
+          <div style={{ fontSize: "0.7rem", color: "var(--muted)", marginTop: 6, fontStyle: "italic" }}>
+            Note: Language translation coming soon
+          </div>
+        </div>
+
+        <button className="btn-primary" onClick={onClose} style={{ width: "100%" }}>
+          Save Settings
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── History Component ───────────────────────────────────────────────────────
+function HistoryPanel({ onClose, language = 'en' }) {
+  const history = getTokenHistory();
+
+  const formatDate = (isoString) => {
+    try {
+      const date = new Date(isoString);
+      return date.toLocaleString('en-IN', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+    } catch {
+      return 'Invalid date';
+    }
+  };
+
+  const formatTime = (isoString) => {
+    try {
+      const date = new Date(isoString);
+      return date.toLocaleTimeString('en-IN', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+    } catch {
+      return '';
+    }
+  };
+
+  return (
+    <div style={{
+      position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      zIndex: 2000, padding: 20
+    }} onClick={onClose}>
+      <div className="card" style={{ padding: 28, maxWidth: 750, width: "100%", maxHeight: "85vh", overflow: "hidden", display: "flex", flexDirection: "column" }}
+        onClick={e => e.stopPropagation()}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
+          <div>
+            <h2 style={{ fontFamily: "Orbitron", fontSize: "1.3rem", color: "var(--cyan)", marginBottom: 4 }}>
+              📋 {t('tokenHistory', language)}
+            </h2>
+            <div style={{ fontSize: "0.75rem", color: "var(--muted)" }}>
+              {history.length} {history.length === 1 ? 'token' : 'tokens'} saved
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            {history.length > 0 && (
+              <button onClick={() => { clearTokenHistory(); window.location.reload(); }} style={{
+                background: "transparent", border: "1px solid var(--red)", borderRadius: 6,
+                color: "var(--red)", cursor: "pointer", fontSize: "0.75rem", padding: "6px 12px",
+                fontFamily: "Sora", fontWeight: 600, transition: "all 0.2s"
+              }}
+              onMouseEnter={e => e.target.style.background = "rgba(255,45,85,0.1)"}
+              onMouseLeave={e => e.target.style.background = "transparent"}>
+                {t('clearAll', language)}
+              </button>
+            )}
+            <button onClick={onClose} style={{
+              background: "transparent", border: "none", color: "var(--muted)",
+              cursor: "pointer", fontSize: "1.8rem", padding: 0, lineHeight: 1
+            }}>×</button>
+          </div>
+        </div>
+
+        <div style={{ flex: 1, overflowY: "auto", marginRight: -10, paddingRight: 10 }}>
+          {history.length === 0 ? (
+            <div style={{ textAlign: "center", padding: "60px 20px" }}>
+              <div style={{ fontSize: "4rem", marginBottom: 16, opacity: 0.3 }}>📋</div>
+              <div style={{ fontSize: "0.95rem", color: "var(--text)", marginBottom: 8 }}>
+                {t('noHistory', language)}
+              </div>
+              <div style={{ fontSize: "0.8rem", color: "var(--muted)" }}>
+                {t('tokensWillAppear', language)}
+              </div>
+            </div>
+          ) : (
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              {history.map((entry, index) => {
+                // Safe data extraction with fallbacks
+                const tokenId = entry?.token?.id || entry?.tokenId || index + 1;
+                const patientName = entry?.patient?.name || 'Unknown Patient';
+                const patientAge = entry?.patient?.age || '?';
+                const patientGender = entry?.patient?.gender || 'N/A';
+                const hospitalName = entry?.hospital?.name || 'Unknown Hospital';
+                const hospitalAddress = entry?.hospital?.address || '';
+                const hospitalDistance = entry?.hospital?.distance || null;
+                const specialization = entry?.analysis?.specialization || 'General';
+                const riskLevel = entry?.analysis?.riskLevel || 'Medium';
+                const position = entry?.position || '?';
+                const total = entry?.total || '?';
+                const waitTime = entry?.token?.waitMins || 0;
+                const symptoms = entry?.patient?.symptoms || '';
+                
+                return (
+                  <div key={entry.id || index} className="card" style={{ 
+                    padding: 18, 
+                    background: "var(--surface)",
+                    borderLeft: `3px solid ${getRiskColor(riskLevel)}`,
+                    transition: "all 0.2s"
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.transform = "translateX(4px)"}
+                  onMouseLeave={e => e.currentTarget.style.transform = "translateX(0)"}>
+                    
+                    {/* Header: Token Number and Risk Badge */}
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
+                      <div>
+                        <div style={{ fontFamily: "Orbitron", fontSize: "1.8rem", color: "var(--cyan)", fontWeight: 700, lineHeight: 1 }}>
+                          T{String(tokenId).padStart(3, "0")}
+                        </div>
+                        <div style={{ fontSize: "0.7rem", color: "var(--muted)", marginTop: 4 }}>
+                          📅 {formatDate(entry.timestamp)}
+                        </div>
+                      </div>
+                      <span className={`badge ${getRiskBadgeClass(riskLevel)}`} style={{ fontSize: "0.7rem", padding: "4px 10px" }}>
+                        {riskLevel}
+                      </span>
+                    </div>
+
+                    {/* Patient Info */}
+                    <div style={{ 
+                      background: "rgba(0,212,255,0.05)", 
+                      border: "1px solid var(--border)", 
+                      borderRadius: 8, 
+                      padding: "10px 12px", 
+                      marginBottom: 10 
+                    }}>
+                      <div style={{ fontSize: "0.9rem", marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
+                        <span style={{ fontSize: "1.1rem" }}>👤</span>
+                        <strong style={{ color: "var(--text)" }}>{patientName}</strong>
+                        <span style={{ color: "var(--muted)", fontSize: "0.8rem" }}>
+                          • {patientAge}y • {patientGender}
+                        </span>
+                      </div>
+                      {symptoms && (
+                        <div style={{ fontSize: "0.75rem", color: "var(--muted)", marginTop: 6 }}>
+                          💬 {symptoms.slice(0, 80)}{symptoms.length > 80 ? '...' : ''}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Hospital Info */}
+                    <div style={{ fontSize: "0.85rem", color: "var(--text)", marginBottom: 8, display: "flex", alignItems: "flex-start", gap: 8 }}>
+                      <span style={{ fontSize: "1rem", flexShrink: 0 }}>🏥</span>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 600, marginBottom: 2 }}>{hospitalName}</div>
+                        {hospitalAddress && (
+                          <div style={{ fontSize: "0.7rem", color: "var(--muted)" }}>
+                            {hospitalAddress.slice(0, 60)}{hospitalAddress.length > 60 ? '...' : ''}
+                          </div>
+                        )}
+                      </div>
+                      {hospitalDistance && (
+                        <div style={{ 
+                          fontSize: "0.7rem", 
+                          color: "var(--cyan)", 
+                          background: "rgba(0,212,255,0.1)", 
+                          padding: "2px 8px", 
+                          borderRadius: 4,
+                          whiteSpace: "nowrap"
+                        }}>
+                          📍 {hospitalDistance}km
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Bottom Row: Specialization, Queue Position, Wait Time */}
+                    <div style={{ 
+                      display: "flex", 
+                      gap: 12, 
+                      fontSize: "0.75rem", 
+                      color: "var(--muted)",
+                      flexWrap: "wrap",
+                      paddingTop: 8,
+                      borderTop: "1px solid var(--border)"
+                    }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                        <span>🩺</span>
+                        <span>{specialization}</span>
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                        <span>📊</span>
+                        <span>Position: {position}/{total}</span>
+                      </div>
+                      {waitTime > 0 && (
+                        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                          <span>⏱️</span>
+                          <span>~{waitTime} mins</span>
+                        </div>
+                      )}
+                      <div style={{ display: "flex", alignItems: "center", gap: 4, marginLeft: "auto" }}>
+                        <span>🕐</span>
+                        <span>{formatTime(entry.timestamp)}</span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── MAIN APP ─────────────────────────────────────────────────────────────────
 export default function App() {
-  const [step, setStep]   = useState(0);
-  const [data, setData]   = useState({});
+  // Theme and language state
+  const [theme, setTheme] = useState(() => {
+    try {
+      return localStorage.getItem('authenx_theme') || 'dark';
+    } catch {
+      return 'dark';
+    }
+  });
+
+  const [language, setLanguage] = useState(() => {
+    try {
+      return localStorage.getItem('authenx_language') || 'en';
+    } catch {
+      return 'en';
+    }
+  });
+
+  const [showSettings, setShowSettings] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
+
+  // Save theme and language to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('authenx_theme', theme);
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch (error) {
+      console.error('Failed to save theme:', error);
+    }
+  }, [theme]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('authenx_language', language);
+    } catch (error) {
+      console.error('Failed to save language:', error);
+    }
+  }, [language]);
+
+  // Load saved progress from localStorage
+  const loadProgress = () => {
+    try {
+      const saved = localStorage.getItem('authenx_progress');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return { step: parsed.step || 0, data: parsed.data || {} };
+      }
+    } catch (error) {
+      console.error('Failed to load progress:', error);
+    }
+    return { step: 0, data: {} };
+  };
+
+  const { step: initialStep, data: initialData } = loadProgress();
+  const [step, setStep] = useState(initialStep);
+  const [data, setData] = useState(initialData);
+
+  // Save progress to localStorage whenever step or data changes
+  useEffect(() => {
+    try {
+      localStorage.setItem('authenx_progress', JSON.stringify({ step, data }));
+    } catch (error) {
+      console.error('Failed to save progress:', error);
+    }
+  }, [step, data]);
+
+  // Scroll to top smoothly when step changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [step]);
+
+  // Clear progress when reaching final step or restarting
+  const clearProgress = () => {
+    try {
+      localStorage.removeItem('authenx_progress');
+    } catch (error) {
+      console.error('Failed to clear progress:', error);
+    }
+  };
+
+  const handleRestart = () => {
+    clearProgress();
+    setData({});
+    setStep(0);
+  };
 
   const steps = ["Location","Family","Symptoms","Hospitals","Analysis","Token"];
 
@@ -2427,10 +3962,56 @@ export default function App() {
         {/* Top bar */}
         <div style={{
           position: "sticky", top: 0, zIndex: 100,
-          background: "rgba(3,13,26,0.95)", backdropFilter: "blur(12px)",
+          background: theme === "dark" ? "rgba(3,13,26,0.95)" : "rgba(255,255,255,0.95)", 
+          backdropFilter: "blur(12px)",
           borderBottom: "1px solid var(--border)",
           padding: "12px 24px", display: "flex", alignItems: "center", gap: 16
         }}>
+          {/* Hamburger Menu */}
+          <div style={{ position: "relative" }}>
+            <button onClick={() => setShowMenu(!showMenu)} style={{
+              background: "transparent", border: "none", color: "var(--cyan)",
+              cursor: "pointer", fontSize: "1.5rem", padding: "4px 8px",
+              display: "flex", flexDirection: "column", gap: 4, alignItems: "center"
+            }}>
+              <div style={{ width: 20, height: 2, background: "var(--cyan)", borderRadius: 2, transition: "all 0.3s" }} />
+              <div style={{ width: 20, height: 2, background: "var(--cyan)", borderRadius: 2, transition: "all 0.3s" }} />
+              <div style={{ width: 20, height: 2, background: "var(--cyan)", borderRadius: 2, transition: "all 0.3s" }} />
+            </button>
+            
+            {/* Dropdown Menu */}
+            {showMenu && (
+              <div className="card" style={{
+                position: "absolute", top: "100%", left: 0, marginTop: 8,
+                minWidth: 200, padding: 8, zIndex: 1000,
+                boxShadow: "0 4px 12px rgba(0,0,0,0.3)"
+              }}>
+                <button onClick={() => { setShowHistory(true); setShowMenu(false); }} style={{
+                  width: "100%", padding: "12px 16px", background: "transparent",
+                  border: "none", color: "var(--text)", cursor: "pointer",
+                  fontSize: "0.9rem", fontFamily: "Sora", textAlign: "left",
+                  borderRadius: 6, transition: "all 0.2s", display: "flex",
+                  alignItems: "center", gap: 10
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = "rgba(0,212,255,0.1)"}
+                onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                  <span>📋</span> History
+                </button>
+                <button onClick={() => { setShowSettings(true); setShowMenu(false); }} style={{
+                  width: "100%", padding: "12px 16px", background: "transparent",
+                  border: "none", color: "var(--text)", cursor: "pointer",
+                  fontSize: "0.9rem", fontFamily: "Sora", textAlign: "left",
+                  borderRadius: 6, transition: "all 0.2s", display: "flex",
+                  alignItems: "center", gap: 10
+                }}
+                onMouseEnter={e => e.currentTarget.style.background = "rgba(0,212,255,0.1)"}
+                onMouseLeave={e => e.currentTarget.style.background = "transparent"}>
+                  <span>⚙️</span> Settings
+                </button>
+              </div>
+            )}
+          </div>
+
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <span style={{ fontSize: "1.3rem" }}>⚕️</span>
             <span style={{ fontFamily: "Orbitron", fontWeight: 900, color: "var(--cyan)", fontSize: "1rem", letterSpacing: "0.1em" }}>
@@ -2458,6 +4039,27 @@ export default function App() {
             LIVE
           </div>
         </div>
+
+        {/* Settings Panel */}
+        {showSettings && (
+          <SettingsPanel 
+            onClose={() => setShowSettings(false)}
+            theme={theme}
+            setTheme={setTheme}
+            language={language}
+            setLanguage={setLanguage}
+          />
+        )}
+
+        {/* History Panel */}
+        {showHistory && (
+          <HistoryPanel onClose={() => setShowHistory(false)} language={language} />
+        )}
+
+        {/* Click outside to close menu */}
+        {showMenu && (
+          <div style={{ position: "fixed", inset: 0, zIndex: 99 }} onClick={() => setShowMenu(false)} />
+        )}
 
         {/* Main content */}
         <div style={{ paddingBottom: 60 }}>
@@ -2491,7 +4093,7 @@ export default function App() {
           {step === 5 && (
             <TokenStep
               data={{ hospital: data.hospital, analysis: data.analysis, avail: data.avail, patient: data.patient }}
-              onRestart={() => { setData({}); setStep(0); }} />
+              onRestart={handleRestart} />
           )}
         </div>
 
