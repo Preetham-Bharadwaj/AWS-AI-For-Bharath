@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/AWS-AI-For-Bharath/static/css/main.e6c13ad2.css",
-    "main.js": "/AWS-AI-For-Bharath/static/js/main.f0a00c47.js",
-    "static/js/453.cc607e55.chunk.js": "/AWS-AI-For-Bharath/static/js/453.cc607e55.chunk.js",
-    "index.html": "/AWS-AI-For-Bharath/index.html",
-    "main.e6c13ad2.css.map": "/AWS-AI-For-Bharath/static/css/main.e6c13ad2.css.map",
-    "main.f0a00c47.js.map": "/AWS-AI-For-Bharath/static/js/main.f0a00c47.js.map",
-    "453.cc607e55.chunk.js.map": "/AWS-AI-For-Bharath/static/js/453.cc607e55.chunk.js.map"
+    "main.css": "/Patient-app/static/css/main.e6c13ad2.css",
+    "main.js": "/Patient-app/static/js/main.b9945d04.js",
+    "static/js/453.cc607e55.chunk.js": "/Patient-app/static/js/453.cc607e55.chunk.js",
+    "index.html": "/Patient-app/index.html",
+    "main.e6c13ad2.css.map": "/Patient-app/static/css/main.e6c13ad2.css.map",
+    "main.b9945d04.js.map": "/Patient-app/static/js/main.b9945d04.js.map",
+    "453.cc607e55.chunk.js.map": "/Patient-app/static/js/453.cc607e55.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.f0a00c47.js"
+    "static/js/main.b9945d04.js"
   ]
 }
