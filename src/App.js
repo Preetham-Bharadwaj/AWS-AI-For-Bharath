@@ -1,4 +1,4 @@
-import React , { useState, useEffect, useRef } from "react";
+import React , { useState, useEffect, useRef, useContext, createContext } from "react";
 
 // ─── Injected Google Font ───────────────────────────────────────────────────
 const FontLink = () => (
@@ -2491,7 +2491,7 @@ function PatientDetailsStep({ onNext, onBack, patient }) {
             {[
               ["💔 Chest / Heart", "chest pain, shortness of breath, palpitations"],
               ["🤒 Fever / Flu",   "high fever, headache, body ache, chills"],
-              ["🦷 Stomach Pain",  "severe abdominal pain, nausea, vomiting"],
+              ["🤢 Stomach Pain",  "severe abdominal pain, nausea, vomiting"],
               ["🦴 Bone / Joint",  "severe joint pain, swelling, difficulty walking"],
               ["🧠 Neuro / Head",  "dizziness, severe headache, vision blur, numbness"],
               ["🩹 Skin / Rash",   "skin rash, severe itching, redness, swelling"],
@@ -3598,7 +3598,7 @@ function SettingsPanel({ onClose, theme, setTheme, language, setLanguage }) {
         </div>
 
         {/* Theme Setting */}
-        <div style={{ marginBottom: 24 }}>
+        {/* <div style={{ marginBottom: 24 }}>
           <div style={{ fontSize: "0.85rem", color: "var(--muted)", marginBottom: 10, fontWeight: 600 }}>
             🎨 Theme
           </div>
@@ -3624,7 +3624,7 @@ function SettingsPanel({ onClose, theme, setTheme, language, setLanguage }) {
               ☀️ Light Mode
             </button>
           </div>
-        </div>
+        </div> */}
 
         {/* Language Setting */}
         <div style={{ marginBottom: 24 }}>
@@ -3870,9 +3870,9 @@ export default function App() {
   // Theme and language state
   const [theme, setTheme] = useState(() => {
     try {
-      return localStorage.getItem('authenx_theme') || 'dark';
+      return localStorage.getItem('authenx_theme') || 'light';
     } catch {
-      return 'dark';
+      return 'light';
     }
   });
 
@@ -3953,6 +3953,16 @@ export default function App() {
     setStep(0);
   };
 
+  const toggleTheme = () => {
+    setTheme(prev => prev === "dark" ? "light":"dark");
+  };
+  // const goHome = () => {
+  //   clearProgress();   // optional but recommended
+  //   setData({});
+  //   setStep(0);
+  // };
+
+  
   const steps = ["Location","Family","Symptoms","Hospitals","Analysis","Token"];
 
   return (
@@ -3979,6 +3989,26 @@ export default function App() {
               <div style={{ width: 20, height: 2, background: "var(--cyan)", borderRadius: 2, transition: "all 0.3s" }} />
             </button>
             
+            {/* Redirect to home
+            <div
+              onClick={handleRestart}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                cursor: "pointer"
+              }}
+            >
+              <span style={{ fontSize: "1.2rem" }}>⚕️</span>
+
+              <span style={{
+                fontFamily: "Orbitron",
+                fontWeight: "bold",
+                color: "var(--cyan)"
+              }}>
+                AUTHENX
+              </span>
+            </div> */}
             {/* Dropdown Menu */}
             {showMenu && (
               <div className="card" style={{
@@ -4012,9 +4042,10 @@ export default function App() {
             )}
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          
+          <div style={{ display: "flex", alignItems: "center", gap: 10 , cursor: "pointer"}} onClick={handleRestart}>
             <span style={{ fontSize: "1.3rem" }}>⚕️</span>
-            <span style={{ fontFamily: "Orbitron", fontWeight: 900, color: "var(--cyan)", fontSize: "1rem", letterSpacing: "0.1em" }}>
+            <span style={{ fontFamily: "Orbitron", fontWeight: 900, color: "var(--cyan)", fontSize: "1rem", letterSpacing: "0.1em" }} >
               AUTHEN<span style={{ color: "var(--green)" }}>X</span>
             </span>
           </div>
@@ -4034,6 +4065,22 @@ export default function App() {
               </div>
             ))}
           </div>
+
+          <button
+            onClick={toggleTheme}
+            style={{
+              marginLeft: "auto",
+              background: "transparent",
+              border: "1px solid var(--border)",
+              padding: "6px 12px",
+              borderRadius: 6,
+              cursor: "pointer",
+              color: "var(--text)",
+              fontSize: "0.9rem"
+            }}
+          >
+            {theme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode"}
+          </button>
           <div style={{ fontSize: "0.72rem", color: "var(--muted)" }}>
             <span className="live-dot" style={{ marginRight: 5 }} />
             LIVE
