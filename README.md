@@ -19,3 +19,6 @@ Critical > High > Medium > Low
 FIFO within same priority  
 
 This ensures emergency cases are handled first while maintaining fairness.
+
+### LIVE AT 
+    https://preetham-bharadwaj.github.io/Patient-app/
